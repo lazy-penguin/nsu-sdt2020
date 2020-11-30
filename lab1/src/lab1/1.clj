@@ -1,28 +1,29 @@
 (ns lab1)
 
-(defn addElement 
-  ([permutation elems] (addElement permutation '() elems))
+(defn add-element
+  ([permutation elems] (add-element permutation '() elems))
   ([permutation permutations elems]
-  (if (empty? elems)
-    permutations
-      (addElement permutation 
-                  (if (= (first permutation) (first elems))
-                    permutations
-                    (cons (concat (list (first elems)) permutation) permutations)) (rest elems)))))
+   (let [first-elem (first elems)]
+     (if (empty? elems)
+       permutations
+       (add-element permutation
+                    (if (= (first permutation) first-elem)
+                      permutations
+                      (cons (cons first-elem permutation) permutations)) (rest elems))))))
 
-(defn forEachPermutation 
-  ([permutations elems] (forEachPermutation permutations '() elems))
+(defn for-each-permutation
+  ([permutations elems] (for-each-permutation permutations '() elems))
   ([permutations result elems]
-  (if (empty? permutations)
-    result
-   (forEachPermutation (rest permutations) (concat result(addElement (first permutations) elems)) elems))))
+   (if (empty? permutations)
+     result
+     (for-each-permutation (rest permutations) (concat result (add-element (first permutations) elems)) elems))))
 
-(defn permutate 
-  ([elems k] (permutate elems (addElement '() elems) (dec k)))
+(defn permutate
+  ([elems k] (permutate elems (add-element '() elems) (dec k)))
   ([elems permutations k]
    (if (= k 0)
      permutations
-     (permutate elems (forEachPermutation permutations elems) (dec k)))))
+     (permutate elems (for-each-permutation permutations elems) (dec k)))))
 
 (defn main [k & elems]
   (if (and (> k 0) (<= k (count elems)))
