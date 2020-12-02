@@ -1,16 +1,16 @@
-(ns lab2)
+(ns lab2.2)
 
-(defn integrate
-  ([f dt] (integrate f 0 dt 0))
+(defn get-partial-sum
+  ([f dt] (get-partial-sum f 0 dt 0))
   ([f t dt S]
-    (lazy-seq (cons S (integrate f (+ t dt) dt (+ S (f t)))))))
+    (lazy-seq (cons S (get-partial-sum f (+ t dt) dt (+ S (f t)))))))
 
-(defn func [x]
-  (* x x))
-
-(defn main [f]
-  (let [dt 0.01]
-   #(* (nth (integrate f dt) (/ % dt)) dt)))
+(defn integrate-lazy [f]
+  (let [dt 0.001]
+   #(* (nth (get-partial-sum f dt) (/ % dt)) dt)))
  
-(time ((main func) 1001))
-(time ((main func) 1000))
+(letfn [(f [x] (* x x))]
+  (time ((integrate-lazy f) 1000))
+  (time ((integrate-lazy f) 990))
+  (time ((integrate-lazy f) 1200))
+  (time ((integrate-lazy f) 1000)))
