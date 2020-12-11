@@ -1,5 +1,8 @@
 (ns lab2.2)
 
+(defn trapezoidal-rule[f x S dt]
+  (* dt (+ S (/ (+ (f 0) (f x)) 2))))
+
 (defn get-partial-sum
   ([f dt] (get-partial-sum f 0 dt 0))
   ([f t dt S]
@@ -7,7 +10,7 @@
 
 (defn integrate-lazy [f]
   (let [dt 0.001]
-   #(* (nth (get-partial-sum f dt) (/ % dt)) dt)))
+   #(trapezoidal-rule f % (nth (get-partial-sum f dt) (/ % dt)) dt)))
  
 (letfn [(f [x] (* x x))]
   (time ((integrate-lazy f) 1000))
